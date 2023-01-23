@@ -46,4 +46,24 @@ const createBook = async function (req, res) {
     }
 }
 
+const getBookDetails = async function (req, res) {
+    try {
+        let data = req.query
+
+        data.isDeleted = false
+
+        allBooks = await booksModel.find(data).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 }).sort({ title: 1 })
+
+        if (allBooks.length == 0) return res.status(404).send({ status: false, message: "Not Found" })
+
+        res.status(200).send({ status: true, message: "Book List", data: allBooks })
+    } catch (error) 
+    {
+        res.status(500).send({ status: false, message: error.message })
+    }
+}
+
+
+module.exports.getBookDetails = getBookDetails
+
 module.exports.createBook = createBook

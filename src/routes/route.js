@@ -10,7 +10,7 @@ router.get("/test-me",(req,res)=>{
 router.post("/register",userController.createUser)
 
 router.all("/*",(req,res)=>{
-    res.status(400).send("Invalid Http Request")
+    res.status(400).send("Invalid Http Request")  
 })
 
 module.exports=router

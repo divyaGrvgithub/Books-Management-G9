@@ -61,3 +61,33 @@ const createUser = async function (req, res){
     }
 
     module.exports.createUser = createUser
+
+    //<<<<<<<<<<<<<<<<<<<<<<=============================Login User==========================>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+const loginUser = async function (req, res) {
+  try {
+     let email = req.body.email;
+     let password = req.body.password
+     if (Object.keys(req.body).length == 0) {
+        return res.status(400).send({ status: false, message: "please provide details" });
+     }
+     if (!(email && password)) {
+        return res.status(400).send({ status: false, message: "Email-Id and Password must be provided!" });
+     }
+
+      let user = await userModel.findOne({ email: email.toLowerCase(), password: password });
+     if (!user) {
+        return res.status(404).send({ status: false, message: " Email or Password wrong" });
+     }  
+
+     let token = jwt.sign({userId: user._id.toString()},"Books-Management-Group-9",
+                          {expiresIn:"2m"})
+     res.status(200).setHeader("x-api-key", token);
+     return res.status(200).send({ status: true, message: "token will be valid for 24 hrs", data: { token: token } }); 
+  } 
+  catch (err) {
+     return res.status(500).send({ status: false, message: err.message })
+  }
+}
+
+module.exports.loginUser = loginUser

@@ -21,5 +21,19 @@ const authenticate = function (req, res, next) {
     }
 }
 
+const autherisation =  async function(req,res,next){
+    try{
+    let data= req.body
+    let checkAuth= await bookModel.findOne(data)
+    if(checkAuth.userId!==req.loginUserId){
+     return res.status(403).send({status:false, msg: "You are not autherised"})
+    }
+     next()
+}
+catch(err){
+    res.status(500).send({status:false,error:err.message})
+}
+}
 
 module.exports.authenticate = authenticate
+module.exports.autherisation= autherisation

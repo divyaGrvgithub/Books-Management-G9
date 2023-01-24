@@ -14,6 +14,10 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
         send({ status: false, msg: "please give some data" })//400-Bad request
 
     let { title, name, phone, email, password } = data
+    if(!Validation.isValid(title)){
+      return res.
+        status(400).send({ status: false, msg: "title should be string" })//validation for string
+    }
     title = data.title = title.trim()
     if (!title) {
       return res.
@@ -127,7 +131,7 @@ const loginUser = async (req, res) => {
       userId: user._id.toString()
     }, //.to string---> it used to allow a object as a string 
       "Books-Management-Group-9",// secret-key
-      { expiresIn: "5m" })
+      { expiresIn: "30m" })
     res.status(200).//200-->successfully
       setHeader("x-api-key", token);
     return res.

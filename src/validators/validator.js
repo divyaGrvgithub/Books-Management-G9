@@ -56,16 +56,11 @@ const isValidArray = (value) => {
     }
 }
 
-const isValidISBN = (value) => {
-    const regEx1 = /^\s*\978([0-9]){10}\s*$/
-    const regEx2 = /^\s*([0-9]){10}\s*$/
-    if(regEx1.test(value) || regEx2.test(value)){
-        return true
-    }
-    else{
-        return false
-    }
+const isValidISBN = function (ISBN) {
+    const regex = /^\+?([1-9]{3})\)?[-. ]?([0-9]{10})$/
+    return regex.test(ISBN)
 }
+
 
 const isValidDate = (value) => {
     const regEx = /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
@@ -91,7 +86,12 @@ const isValidImage = (value) => {
     return result
 }
 
+const isEmpty = function (value) {
+    if (typeof (value) === 'string' && value.trim().length == 0) { return false }
+    return true
+}
+
 module.exports = { isValid, isValidArray, isValidISBN, isValidObject, 
                    validTitle, isValidDate, isValidRating , isValidPinCode, 
                    isValidImage, isValidName, isValidNumber, isValidEmail, 
-                   isValidPassword}
+                   isValidPassword, isEmpty}

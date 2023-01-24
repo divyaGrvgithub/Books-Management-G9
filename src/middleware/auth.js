@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken")
 
+// <<<<<<<<<----------------------Authentication----------------------------->>>>>>>>>>>>
+
 const authenticate = function (req, res, next) {
     try {
         const token = req.headers["x-api-key"]
@@ -21,7 +23,8 @@ const authenticate = function (req, res, next) {
     }
 }
 
-const autherisation =  async function(req,res,next){
+// <<<<<<<<<----------------------Authorisation------------------------------->>>>>>>>>>>>>
+const authorisation =  async function(req,res,next){
     try{
     let data= req.body
     let checkAuth= await bookModel.findOne(data)
@@ -36,4 +39,4 @@ catch(err){
 }
 
 module.exports.authenticate = authenticate
-module.exports.autherisation= autherisation
+module.exports.authorisation= authorisation

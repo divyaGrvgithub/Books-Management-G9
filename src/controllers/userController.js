@@ -13,8 +13,8 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
         status(400).
         send({ status: false, msg: "please give some data" })//400-Bad request
 
-    const { title, name, phone, email, password } = data
-
+    let { title, name, phone, email, password } = data
+    title = data.title = title.trim()
     if (!title) {
       return res.
         status(400).send({ status: false, message: "Please provide title " })//title is mandatory   
@@ -24,19 +24,21 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ msg: "Please write title like Mr, Mrs, Miss" });//------
     }
+    name = data.name = name.trim()
     if (!name) {
       return res.
         status(400).send({ status: false, message: "Please provide name " })//Name is Mandatory     
     }
-    if (!Validation.test(name)) {
+    if (!Validation.isValidName(name)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid Name" })//validation for Name
     }
+    phone = data.phone = phone.trim()
     if (!phone) {
       return res.
         status(400).send({ status: false, message: "Please provide phone " })//Phone Number is mandatory
     }
-    if (!Validation.test(phone)) {
+    if (!Validation.isValidNumber(phone)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })//Validation for Phone Number
     }
@@ -45,11 +47,12 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, msg: "Phone already exists" });
     }
+    email = data.email = email.trim()
     if (!email) {
       return res.
         status(400).send({ status: false, message: "Please provide Email " })//Email is Mandatory    
     }
-    if (!Validation.test(email)) {
+    if (!Validation.isValidEmail(email)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid email ID" })//validation for email
     }
@@ -58,11 +61,12 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, msg: "email already exists" });
     }
+    password = data.password = password.trim()
     if (!password) {
       return res.
         status(400).send({ status: false, message: "Please provide password " })//password is mandatory
     }
-    if (!Validation.test(password)) {//validation for password
+    if (!Validation.isValidPassword(password)) {//validation for password
       return res.
         status(400).send({ status: false, msg: " Incorrect Password, It should be of 6-10 digits with atlest one special character, alphabet and number" });
     }

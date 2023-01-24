@@ -24,6 +24,10 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ msg: "Please write title like Mr, Mrs, Miss" });//------
     }
+    if(!Validation.isValid(name)){
+      return res.
+        status(400).send({ status: false, msg: "name should be string" })
+    }
     name = data.name = name.trim()
     if (!name) {
       return res.
@@ -32,6 +36,10 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
     if (!Validation.isValidName(name)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid Name" })//validation for Name
+    }
+    if(!Validation.isValid(phone)){
+      return res.
+        status(400).send({ status: false, msg: "phone should be string" })
     }
     phone = data.phone = phone.trim()
     if (!phone) {
@@ -47,6 +55,10 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, msg: "Phone already exists" });
     }
+    if(!Validation.isValid(email)){
+      return res.
+        status(400).send({ status: false, msg: "email should be string" })
+    }
     email = data.email = email.trim()
     if (!email) {
       return res.
@@ -60,6 +72,10 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
     if (checkemail) {
       return res.
         status(400).send({ status: false, msg: "email already exists" });
+    }
+    if(!Validation.isValid(password)){
+      return res.
+        status(400).send({ status: false, msg: "password should be string" })
     }
     password = data.password = password.trim()
     if (!password) {
@@ -111,7 +127,7 @@ const loginUser = async (req, res) => {
       userId: user._id.toString()
     }, //.to string---> it used to allow a object as a string 
       "Books-Management-Group-9",// secret-key
-      { expiresIn: "2m" })
+      { expiresIn: "5m" })
     res.status(200).//200-->successfully
       setHeader("x-api-key", token);
     return res.

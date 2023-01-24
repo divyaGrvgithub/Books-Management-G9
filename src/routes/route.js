@@ -15,7 +15,7 @@ router.post("/login",userController.loginUser)
 
 // <<<<<<<<<<<<<++++++++Book api with Authentication and authorisation++++++++++++>>>>>>>>>>>
 
-router.post("/books",middleware.authenticate,bookController.createBook)
+router.post("/books",middleware.authenticate,middleware.authorisation,bookController.createBook)
 router.get("/books",middleware.authenticate,bookController.getBookDetails)
 
 // <<<<<<<<<<<<<<

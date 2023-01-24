@@ -11,6 +11,31 @@ const isValid = (value) => {
     }
 }
 
+const isValidName = function (value) {
+    const regEx = /^\s*([a-zA-Z\s\,\.]){2,100}\s*$/
+    const result = regEx.test(value)
+    return result
+}
+
+const isValidNumber = function (value) {
+    const regEx = /^\s*\91([0-9]){10}\s*$/
+    const result = regEx.test(value)
+    return result
+}
+
+const isValidEmail = function (value) {
+    let emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-z\-0-9]+\.)+[a-z]{2,}))$/;
+    return emailRegex.test(value)
+};
+
+const isValidPassword = function (password) {
+    const passwordRegex =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    return passwordRegex.test(password);
+};
+
+
 function validTitle(value) {
     if (typeof value === "undefined" || typeof value === "null" || typeof value === "number") return false
     if (typeof value === "string" && value.trim().length === 0) return false
@@ -66,4 +91,7 @@ const isValidImage = (value) => {
     return result
 }
 
-module.exports = { isValid, isValidArray, isValidISBN, isValidObject, validTitle, isValidDate, isValidRating , isValidPinCode, isValidImage}
+module.exports = { isValid, isValidArray, isValidISBN, isValidObject, 
+                   validTitle, isValidDate, isValidRating , isValidPinCode, 
+                   isValidImage, isValidName, isValidNumber, isValidEmail, 
+                   isValidPassword}

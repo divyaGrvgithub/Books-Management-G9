@@ -1,6 +1,6 @@
 const userModel = require("../Models/userModel")
 const jwt = require("jsonwebtoken")
-const validation = require("../validators/validator")
+const Validation = require("../validators/validator")
 
 // <<<<<<<<<<<----------------------------Create User----------------------------->>>>>>>>>>
 // <<<<<<<++++++++++++++++++++++++This Api for Create a User+++++++++++++++++++++++++++>>>>>>>>>>>>
@@ -28,7 +28,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide name " })//Name is Mandatory     
     }
-    if (!regexValidation.test(name)) {
+    if (!Validation.test(name)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid Name" })//validation for Name
     }
@@ -36,7 +36,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide phone " })//Phone Number is mandatory
     }
-    if (!regexValidNumber.test(phone)) {
+    if (!Validation.test(phone)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })//Validation for Phone Number
     }
@@ -49,7 +49,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide Email " })//Email is Mandatory    
     }
-    if (!emailValidator.validate(email)) {
+    if (!Validation.test(email)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid email ID" })//validation for email
     }
@@ -62,8 +62,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide password " })//password is mandatory
     }
-    const validPassword = passwordFormat.test(password)//validation for password
-    if (!validPassword) {
+    if (!Validation.test(password)) {//validation for password
       return res.
         status(400).send({ status: false, msg: " Incorrect Password, It should be of 6-10 digits with atlest one special character, alphabet and number" });
     }

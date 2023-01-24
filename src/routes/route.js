@@ -8,6 +8,9 @@ router.get("/test-me",(req,res)=>{
 })
 
 router.post("/register",userController.createUser)
+router.post("/login",userController.loginUser)
+router.post("/books",bookController.createBook)
+router.get("/books",bookController.getBookDetails)
 
 router.all("/*",(req,res)=>{
     res.status(400).send("Invalid Http Request")  

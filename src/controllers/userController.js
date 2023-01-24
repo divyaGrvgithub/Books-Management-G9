@@ -1,93 +1,124 @@
 const userModel = require("../Models/userModel")
 const jwt = require("jsonwebtoken")
-const emailValidator = require('email-validator')
+const validation = require("../validators/validator")
 
-let regexValidation = new RegExp(/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
-let regexValidNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
-const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
+// <<<<<<<<<<<----------------------------Create User----------------------------->>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++This Api for Create a User+++++++++++++++++++++++++++>>>>>>>>>>>>
 
-// <----------------------------Create User----------------------------->
+const createUser = async (req, res) => { //=>-- it allows you to create a code in a cleaner way compared to other function.
+  try {
+    let data = req.body
+    if (Object.keys(data).length == 0) // return all the keys of objevt as array 
+      return res.
+        status(400).
+        send({ status: false, msg: "please give some data" })//400-Bad request
 
-const createUser = async function (req, res){
-    try {
-        let data = req.body
-        if (Object.keys(data).length == 0) 
-        return res.status(400).send({ status: false, msg: "plzz give some data" })
-    
-        const { title, name, phone, email, password} = data
-    
-        if(!title ){
-          return res.status(400).send({status:false, message:"Please provide title "})     }
-    
-        if (title != "Mr" && title != "Miss" && title != "Mrs"){
-            return res.status(400).send({ msg: "Please write title like Mr, Mrs, Miss" });//------
-        }
-        if(!name ){
-          return res.status(400).send({status:false, message:"Please provide name "})     
-        }
-        if(!phone ){
-          return res.status(400).send({status:false, message:"Please provide phone "})    
-         }
-        if(!password ){
-          return res.status(400).send({status:false, message:"Please provide password "})     
-        }
-      
-        if (!regexValidation.test(name)) 
-        return res.status(400).send({ status: false, msg: "Please Enter Valid Name" })
+    const { title, name, phone, email, password } = data
 
-        if (!regexValidNumber.test(phone)) 
-        return res.status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })
-
-        if (!emailValidator.validate(email))
-        return res.status(400).send({ status: false, msg: "Please Enter Valid email ID" })
-
-        const validPassword = passwordFormat.test(password)//-
-
-        if (!validPassword){
-            return res.status(400).send({ status: false, msg: " Incorrect Password, It should be of 6-10 digits with atlest one special character, alphabet and number" });}
-    
-        const chkPhone= await userModel.findOne({phone:phone,isDeleted: false })
-        if (chkPhone)
-        return res.status(400).send({ status: false, msg: "Phone already exists" });
-
-        const chkemail= await userModel.findOne({email:email})
-        if (chkemail)
-        return res.status(400).send({ status: false, msg: "email already exists" });
-      
-        const user= await userModel.create(data);
-        return res.status(201).send({ status: true,msg:"Succes", data: user })
-      } catch (error) {
-        res.status(500).send({ status: false, msg: error.message })}
+    if (!title) {
+      return res.
+        status(400).send({ status: false, message: "Please provide title " })//title is mandatory   
     }
 
-    module.exports.createUser = createUser
+    if (title != "Mr" && title != "Miss" && title != "Mrs") {
+      return res.
+        status(400).send({ msg: "Please write title like Mr, Mrs, Miss" });//------
+    }
+    if (!name) {
+      return res.
+        status(400).send({ status: false, message: "Please provide name " })//Name is Mandatory     
+    }
+    if (!regexValidation.test(name)) {
+      return res.
+        status(400).send({ status: false, msg: "Please Enter Valid Name" })//validation for Name
+    }
+    if (!phone) {
+      return res.
+        status(400).send({ status: false, message: "Please provide phone " })//Phone Number is mandatory
+    }
+    if (!regexValidNumber.test(phone)) {
+      return res.
+        status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })//Validation for Phone Number
+    }
+    const checkPhone = await userModel.findOne({ phone: phone, isDeleted: false })//This db call for check that the phone number is already present in our database or not
+    if (checkPhone) {
+      return res.
+        status(400).send({ status: false, msg: "Phone already exists" });
+    }
+    if (!email) {
+      return res.
+        status(400).send({ status: false, message: "Please provide Email " })//Email is Mandatory    
+    }
+    if (!emailValidator.validate(email)) {
+      return res.
+        status(400).send({ status: false, msg: "Please Enter Valid email ID" })//validation for email
+    }
+    const checkemail = await userModel.findOne({ email: email })////This db call for check that the Email is already present in our database or not
+    if (checkemail) {
+      return res.
+        status(400).send({ status: false, msg: "email already exists" });
+    }
+    if (!password) {
+      return res.
+        status(400).send({ status: false, message: "Please provide password " })//password is mandatory
+    }
+    const validPassword = passwordFormat.test(password)//validation for password
+    if (!validPassword) {
+      return res.
+        status(400).send({ status: false, msg: " Incorrect Password, It should be of 6-10 digits with atlest one special character, alphabet and number" });
+    }
 
-    //<<<<<<<<<<<<<<<<<<<<<<=============================Login User==========================>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-const loginUser = async function (req, res) {
-  try {
-     let email = req.body.email;
-     let password = req.body.password
-     if (Object.keys(req.body).length == 0) {
-        return res.status(400).send({ status: false, message: "please provide details" });
-     }
-     if (!(email && password)) {
-        return res.status(400).send({ status: false, message: "Email-Id and Password must be provided!" });
-     }
-
-      let user = await userModel.findOne({ email: email.toLowerCase(), password: password });
-     if (!user) {
-        return res.status(404).send({ status: false, message: " Email or Password wrong" });
-     }  
-
-     let token = jwt.sign({userId: user._id.toString()},"Books-Management-Group-9",
-                          {expiresIn:"2m"})
-     res.status(200).setHeader("x-api-key", token);
-     return res.status(200).send({ status: true, message: "token will be valid for 24 hrs", data: { token: token } }); 
-  } 
-  catch (err) {
-     return res.status(500).send({ status: false, message: err.message })
+    const user = await userModel.create(data);//final step
+    return res.
+      status(201).
+      send({ status: true, msg: "Successfully created", data: user })//201-- created Successfully
+  } catch (error) {
+    res.status(500).send({ status: false, msg: error.message })
   }
 }
 
+// <<<<<<<<<<<----------------------------Login User----------------------------->>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++This Api for Login a User+++++++++++++++++++++++++++>>>>>>>>>>>>
+
+
+const loginUser = async (req, res) => {
+  try {
+    let email = req.body.email;
+    let password = req.body.password
+
+    if (Object.keys(req.body).length == 0) {//object.keys-->return all the keys of object as array
+      return res.
+        status(400).//400-->Bad request
+        send({ status: false, message: "please provide details" });
+    }
+    if (!(email && password)) {
+      return res.
+        status(400).
+        send({ status: false, message: "Email-Id and Password must be provided!" });
+    }
+
+    let user = await userModel.findOne({ email: email.toLowerCase(), password: password });//findone---> it return first document when query matching otherwise it returns null.
+    if (!user) {
+      return res.
+        status(404).//404--->not found
+        send({ status: false, message: " Email or Password wrong" });
+    }
+
+    let token = jwt.sign({ //jwt.sign-->it used to create a token
+      userId: user._id.toString()
+    }, //.to string---> it used to allow a object as a string 
+      "Books-Management-Group-9",// secret-key
+      { expiresIn: "2m" })
+    res.status(200).//200-->successfully
+      setHeader("x-api-key", token);
+    return res.
+      status(200).
+      send({ status: true, message: "token will be valid for 24 hrs", data: { token: token } });
+  }
+  catch (err) {
+    return res.status(500).send({ status: false, message: err.message })//500- server side problem
+  }
+}
+
+module.exports.createUser = createUser
 module.exports.loginUser = loginUser

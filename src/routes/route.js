@@ -17,7 +17,7 @@ router.post("/login",userController.loginUser)
 
 router.post("/books",middleware.authenticate,middleware.authorisation,bookController.createBook)
 router.get("/books",middleware.authenticate,bookController.getBookDetails)
-router.put("/books/:bookId",middleware.authenticate,bookController.updateBooksbyId)
+router.put("/books/:bookId",middleware.authenticate,middleware.authorisation,bookController.updateBooksbyId)
 
 // <<<<<<<<<<<<<<
 router.all("/*",(req,res)=>{

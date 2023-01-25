@@ -134,8 +134,68 @@ const getBookDetails = async (req, res) => {
 // <<<<<<<++++++++++This Api for Update a book by changing title, excerpt, release date, ISBN++++++++++>>>>>>>>>>>>
 
 const updateBooksbyId = async(req,res)=>{
-    
+    try {
+        let id = req.params.bookId;
+
+        if (!isValidObjectId(id)) {
+            return res.status(400).send({ status: false, message: "bookId is invalid" })}
+
+        const data = req.body;
+        let { title, excerpt, releasedAt, ISBN } = data
+
+        if (Object.keys(data).length == 0)
+            return res.
+            status(400).send({ status: false, message: "Please pass proper data to update. " })
+        
+        /*-----------------Checking fileds values are empty or not-----------------------*/
+        if (!(Validation.isEmpty(title))) { 
+            return res.
+            status(400).send({ status: false, message: "title is empty" }) }
+        if (!(Validation.isEmpty(excerpt))) { 
+            return res.
+            status(400).send({ status: false, message: "excerpt is empty" }) }
+        if (!(Validation.isEmpty(releasedAt))) { 
+            return res.
+            status(400).send({ status: false, message: "releasedAt is empty" }) }
+        if (!(Validation.isEmpty(ISBN))) { 
+            return res.
+            status(400).send({ status: false, message: "ISBN is empty" }) }
+
+        /*------------------------------- Validation(Regex)  -----------------------------------*/
+        if(ISBN){
+            if (!(Validation.isValidISBN(ISBN))) {
+                return res.status(400).
+                send({ status: false, message: "ISBN is invalid" })}
+        }
+        
+        if(releasedAt){
+            if (!(Validation.isValidDate(releasedAt))) {
+                return res.status(400).
+                send({ status: false, message: "Date is invalid." })}
+        }
+
+        const updatedBooks = await booksModel.findOneAndUpdate({ _id: id },
+            {
+                $set: {
+                    title: data.title,
+                    excerpt: data.excerpt,
+                    releasedAt: data.releasedAt,
+                    ISBN: data.ISBN
+                }
+            },
+            { new: true })
+
+
+        return res.status(200).send({ status: true, message: "Success", data: updatedBooks })
+
+    }
+    catch (error) {
+        res.status(500).send({ status: false, message: error.message })
+    }
 }
+
+    
+
 
 module.exports.createBook = createBook
 module.exports.getBookDetails = getBookDetails

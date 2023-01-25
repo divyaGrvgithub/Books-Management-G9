@@ -28,12 +28,12 @@ const authenticate = function (req, res, next) {
 }
 
 // <<<<<<<<<----------------------Authorisation------------------------------->>>>>>>>>>>>>
-const authorisation =  async function(req,res,next){
-    try{
-    let data= req.body
-    if(Object.keys(data).length===0) return res.status(400).send({status:false, msg:"Please enter some data"})
-    let {userId}=data
-    if(userId){
+const authorisation = async function (req, res, next) {
+    try {
+        let data = req.body
+        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "Please enter some data" })
+        let { userId } = data
+        if (userId) {
             if (!mongoose.Types.ObjectId.isValid(userId)) {
                 return res.status(400).send({ status: false, message: "Please enter valid userId" })
             }
@@ -41,23 +41,27 @@ const authorisation =  async function(req,res,next){
             if (!findUser) {
                 return res.status(404).send({ status: false, message: "UserId not found" })
             }
-        if(userId!==req.loginUserId){
-            return res.status(403).send({status:false, msg: "You are not autherised"})
-           }
+            if (userId !== req.loginUserId) {
+                return res.status(403).send({ status: false, msg: "You are not authorised" })
+            }
+        }
+        else {
+            let bookId = req.params.bookId
+            let checkAuth = await bookModel.findOne({ _id: bookId })
+            console.log(checkAuth)
+            console.log(req.loginUserId)
+            if (checkAuth === null) return res.status(400).send({ status: false, msg: "Not find any book" })
+            if (checkAuth.userId !== req.loginUserId) {
+                return res.status(403).send({ status: false, msg: "You are not autherised" })
+            }
+        }
+        next()
     }
-    else{
-    let checkAuth= await bookModel.findOne(data)
-    if(checkAuth===null) return res.status(400).send({status:false, msg:"Not find any book"})
-    if(checkAuth.userId!==req.loginUserId){
-     return res.status(403).send({status:false, msg: "You are not autherised"})
-    }
-    }
-     next()
+    catch (err) {
+        res.status(500).send({ status: false, error: err.message })
+    }
 }
-catch(err){
-    res.status(500).send({status:false,error:err.message})
-}
-}
+
 
 module.exports.authenticate = authenticate
 module.exports.authorisation= authorisation

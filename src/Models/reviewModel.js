@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const objectId = mongoose.Schema.Types.objectId
+const objectId = mongoose.Schema.Types.ObjectId
 
 const reviewSchema = new mongoose.Schema({
     bookId: {

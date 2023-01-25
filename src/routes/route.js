@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const bookController = require("../controllers/bookController")
 const userController = require("../controllers/userController")
+const reviewController = require("../controllers/reviewController")
 const middleware = require("../middleware/auth.js")
 
 // <<<<<<<<<<++++++++++++Dummy Api+++++++++++++++++++>>>>>>>>>>>>>>>>>>>.
@@ -17,7 +18,10 @@ router.post("/login",userController.loginUser)
 
 router.post("/books",middleware.authenticate,middleware.authorisation,bookController.createBook)
 router.get("/books",middleware.authenticate,bookController.getBookDetails)
+router.get("/books/:bookId",middleware.authenticate,bookController.getbookById)
 router.put("/books/:bookId",middleware.authenticate,middleware.authorisation,bookController.updateBooksbyId)
+
+router.post("/books/:bookId/review",middleware.authenticate,reviewController.createReview)
 
 // <<<<<<<<<<<<<<
 router.all("/*",(req,res)=>{

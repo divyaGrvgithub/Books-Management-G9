@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const booksModel = require("../Models/booksModel")
 const reviewModel = require("../Models/reviewModel")
-const valid = require('../validator/validation')
+const valid = require('../validators/validator')
 
 const createReview = async function (req, res) {
     try{
@@ -11,8 +11,6 @@ const createReview = async function (req, res) {
 
     let isExistBook = await booksModel.findOne({ _id: bookId, isDeleted: false })
     if (!isExistBook) return res.status(404).send({ status: false, message: "Book not found" })
-
-
 
     let data = req.body
     if(Object.keys(data).length < 1) return res.status(400).send({status:false , message:"Please enter data in Body"})
@@ -25,10 +23,8 @@ const createReview = async function (req, res) {
     if (!valid.isValid(review)) return res.status(400).send({ status: false, message: "Review should be String" })
     review = data.review = review.trim()
     
-
     if (!rating) return res.status(400).send({ status: false, message: "Please provide rating" })
     if (!valid.isValidRating(rating)) return res.status(400).send({ status: false, message: "Rating should be Number" })
-
 
     //!doubt
     if (reviewedBy) {

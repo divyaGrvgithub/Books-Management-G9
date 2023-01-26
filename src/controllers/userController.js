@@ -13,7 +13,10 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
         status(400).
         send({ status: false, msg: "please give some data" })//400-Bad request
 
-    let { title, name, phone, email, password } = data
+    let { title, name, phone, email, password, address, ...rest } = data
+
+    if (Object.keys(rest).length == 0)
+      return res.status(400).send({ status: false, message: "Please pass proper data to create " })
 
     title = data.title = title.trim()
     if (!title) {
@@ -89,6 +92,48 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
     if (!Validation.isValidPassword(password)) {//validation for password
       return res.
         status(400).send({ status: false, msg: " Incorrect Password, It should be of 6-10 digits with atlest one special character, alphabet and number" });
+    }
+
+    if (address) {
+      let { street, city, pincode, ...rest } = address
+      if (Object.keys(rest).length == 0)
+        return res.status(400).send({ status: false, message: "Please pass proper data in address. " })
+
+      if (street) {
+        street = data.street = street.trim()
+        if (!street) {
+          return res.
+            status(400).send({ status: false, message: "Please provide street if you want" })
+        }
+        if (!Validation.isValid(street)) {
+          return res.
+            status(400).send({ status: false, msg: "street should be string" })
+        }
+      }
+
+      if (city) {
+        city = data.city = city.trim()
+        if (!city) {
+          return res.
+            status(400).send({ status: false, message: "Please provide city if you want " })
+        }
+        if (!Validation.isValid(city)) {
+          return res.
+            status(400).send({ status: false, msg: "city should be string" })
+        }
+      }
+
+      if (pincode) {
+        pincode = data.pincode = pincode.trim()
+        if (!pincode) {
+          return res.
+            status(400).send({ status: false, message: "Please provide pincode if you want " })
+        }
+        if (!Validation.isValidPinCode(pincode)) {
+          return res.
+            status(400).send({ status: false, msg: "pincode should be number" })
+        }
+      }
     }
 
     const user = await userModel.create(data);//final step

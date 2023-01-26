@@ -6,7 +6,7 @@ const Validation = require("../validators/validator")
 const { isValidObjectId } = require("mongoose")
 
 // <<<<<<<<<<<----------------------------Create User(Post api)----------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++This Api for Create a Book+++++++++++++++++++++++++++>>>>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++This Api is used to Create a Book+++++++++++++++++++++++++++>>>>>>>>>>>>
 
 const createBook = async (req, res) => {
     try {
@@ -73,7 +73,7 @@ const createBook = async (req, res) => {
 }
 
 // <<<<<<<<<<<---------------------------------Get Book(Get Api)------------------------------------>>>>>>>>>>
-// <<<<<<<+++++++++++++++++This Api for get Book by userID  Category Subcategory ++++++++++++++++++++>>>>>>>>>>>>
+// <<<<<<<+++++++++++++++++This Api is used get Bookdata by userID  Category Subcategory ++++++++++++++++++++>>>>>>>>>>>>
 
 const getBookDetails = async (req, res) => {
     try {
@@ -103,58 +103,65 @@ const getBookDetails = async (req, res) => {
 }
 
 // <<<<<<<<<<<---------------------------------Get Book By Id(Get Api)------------------------------------>>>>>>>>>>
-// <<<<<<<+++++++++++++++++This Api for get Book by userID  Category Subcategory ++++++++++++++++++++>>>>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++++This Api is used to get Book by bookid +++++++++++++++++++++++++++++>>>>>>>>>>>>
 
-const getbookById = async function(req,res){
-    let bookId= req.params.bookId
+const getbookById = async function (req, res) {
+    let bookId = req.params.bookId
 
-    if(!mongoose.isValidObjectId(bookId)) return res.status(400).send({status:false, msg:"Please enter valid id in path param"})
-    
-    let bookData = await booksModel.findOne({_id: bookId, isDeleted:false})
-    if(!bookData) return res.status(400).send({status:false, msg:"Book not found"})
+    if (!mongoose.isValidObjectId(bookId)) return res.status(400).send({ status: false, msg: "Please enter valid id in path param" })
 
-    let reviewData= await reviewModel.find({bookId: bookId, isDeleted:false})
-    bookData.reviewsData= reviewData
-    return res.status(200).send({status:true,msg:bookData})
+    let bookData = await booksModel.findOne({ _id: bookId, isDeleted: false })
+    if (!bookData) return res.status(400).send({ status: false, msg: "Book not found" })
+
+    let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false })
+    bookData.reviewsData = reviewData
+    return res.status(200).send({ status: true, msg: bookData })
 }
 
 
 
 // <<<<<<<<<<<---------------------------------Update Book(Put Api)----------------------------------->>>>>>>>>>
-// <<<<<<<++++++++++This Api for Update a book by changing title, excerpt, release date, ISBN++++++++++>>>>>>>>>>>>
+// <<<<<<<++++++++++This Api is used to Update a book by changing title, excerpt, release date, ISBN++++++++++>>>>>>>>>>>>
 
-const updateBooksbyId = async(req,res)=>{
+const updateBooksbyId = async (req, res) => {
     try {
         let id = req.params.bookId;
 
         if (!isValidObjectId(id)) {
-            return res.status(400).send({ status: false, message: "bookId is invalid" })}
+            return res.status(400).send({ status: false, message: "bookId is invalid" })
+        }
 
         const data = req.body;
         let { title, excerpt, releasedAt, ISBN } = data
 
         if (Object.keys(data).length == 0)
             return res.status(400).send({ status: false, message: "Please pass proper data to update. " })
-        
+
         /*-----------------Checking fileds values are empty or not-----------------------*/
-        if (!(Validation.isEmpty(title))) { 
-            return res.status(400).send({ status: false, message: "title is empty" }) }
-        if (!(Validation.isEmpty(excerpt))) { 
-            return res.status(400).send({ status: false, message: "excerpt is empty" }) }
-        if (!(Validation.isEmpty(releasedAt))) { 
-            return res.status(400).send({ status: false, message: "releasedAt is empty" }) }
-        if (!(Validation.isEmpty(ISBN))) { 
-            return res.status(400).send({ status: false, message: "ISBN is empty" }) }
+        if (!(Validation.isEmpty(title))) {
+            return res.status(400).send({ status: false, message: "title is empty" })
+        }
+        if (!(Validation.isEmpty(excerpt))) {
+            return res.status(400).send({ status: false, message: "excerpt is empty" })
+        }
+        if (!(Validation.isEmpty(releasedAt))) {
+            return res.status(400).send({ status: false, message: "releasedAt is empty" })
+        }
+        if (!(Validation.isEmpty(ISBN))) {
+            return res.status(400).send({ status: false, message: "ISBN is empty" })
+        }
 
         /*------------------------------- Validation(Regex)  -----------------------------------*/
-        if(ISBN){
+        if (ISBN) {
             if (!(Validation.isValidISBN(ISBN))) {
-                return res.status(400).send({ status: false, message: "ISBN is invalid" })}
+                return res.status(400).send({ status: false, message: "ISBN is invalid" })
+            }
         }
-        
-        if(releasedAt){
+
+        if (releasedAt) {
             if (!(Validation.isValidDate(releasedAt))) {
-                return res.status(400).send({ status: false, message: "Date is invalid." })}
+                return res.status(400).send({ status: false, message: "Date is invalid." })
+            }
         }
 
         const findinDB = await booksModel.findById(id);
@@ -163,7 +170,7 @@ const updateBooksbyId = async(req,res)=>{
 
         if (findinDB.isDeleted == true)
             return res.status(404).send({ status: false, message: "This book is already deleted" })//CHECKING IF DELETED OR NOT
-        
+
         const duplicateTitle = await booksModel.findOne({ title: data.title })
         if (duplicateTitle)
             return res.status(400).send({ status: false, message: "Title is already registered" })//CHECKING TITLE IS ALREADY REGISTERED OR NOT-
@@ -186,11 +193,11 @@ const updateBooksbyId = async(req,res)=>{
 
     }
     catch (error) {
-        res.status(500).send({ status: false, message: error.message })
-    }
+        res.status(500).send({ status: false, message: error.message })
+    }
 }
 
 module.exports.createBook = createBook
 module.exports.getBookDetails = getBookDetails
-module.exports.updateBooksbyId=updateBooksbyId
-module.exports.getbookById=getbookById
+module.exports.updateBooksbyId = updateBooksbyId
+module.exports.getbookById = getbookById

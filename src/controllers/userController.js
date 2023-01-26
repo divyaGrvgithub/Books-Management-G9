@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 const Validation = require("../validators/validator")
 
 // <<<<<<<<<<<----------------------------Create User----------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++This Api for Create a User+++++++++++++++++++++++++++>>>>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++This Api is used to Create a User+++++++++++++++++++++++++++>>>>>>>>>>>>
 
 const createUser = async (req, res) => { //=>-- it allows you to create a code in a cleaner way compared to other function.
   try {
@@ -20,7 +20,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide title " })//title is mandatory   
     }
-    if(!Validation.isValid(title)){
+    if (!Validation.isValid(title)) {
       return res.
         status(400).send({ status: false, msg: "title should be string" })//validation for string
     }
@@ -33,7 +33,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide name " })//Name is Mandatory     
     }
-    if(!Validation.isValid(name)){
+    if (!Validation.isValid(name)) {
       return res.
         status(400).send({ status: false, msg: "name should be string" })
     }
@@ -46,7 +46,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide phone " })//Phone Number is mandatory
     }
-    if(!Validation.isValid(phone)){
+    if (!Validation.isValid(phone)) {
       return res.
         status(400).send({ status: false, msg: "phone should be string" })
     }
@@ -64,7 +64,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide Email " })//Email is Mandatory    
     }
-    if(!Validation.isValid(email)){
+    if (!Validation.isValid(email)) {
       return res.
         status(400).send({ status: false, msg: "email should be string" })
     }
@@ -82,7 +82,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, message: "Please provide password " })//password is mandatory
     }
-    if(!Validation.isValid(password)){
+    if (!Validation.isValid(password)) {
       return res.
         status(400).send({ status: false, msg: "password should be string" })
     }
@@ -99,7 +99,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
 }
 
 // <<<<<<<<<<<----------------------------Login User----------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++This Api for Login a User+++++++++++++++++++++++++++>>>>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++This Api is used to Login a User+++++++++++++++++++++++++++>>>>>>>>>>>>
 
 
 const loginUser = async (req, res) => {

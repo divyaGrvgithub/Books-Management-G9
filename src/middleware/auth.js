@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
-const mongoose= require("mongoose")
-const bookModel= require('../Models/booksModel')
-const userModel= require('../Models/userModel')
+const mongoose = require("mongoose")
+const bookModel = require('../Models/booksModel')
+const userModel = require('../Models/userModel')
 
 
 // <<<<<<<<<----------------------Authentication----------------------------->>>>>>>>>>>>
@@ -10,17 +10,18 @@ const authenticate = function (req, res, next) {
     try {
         const token = req.headers["x-api-key"]
         if (!token) {
-           return res.status(400).send({ status: false, message: "token must be present" })
+            return res.status(400).send({ status: false, message: "token must be present" })
         }
         else {
-         jwt.verify(token, "Books-Management-Group-9", function (err, data) {
-          if (err) {
-         return res.status(400).send({ status: false, message: err.message })
-            }
-            else {
-                req.loginUserId = data.userId                  
-                        next();                    
-                }})
+            jwt.verify(token, "Books-Management-Group-9", function (err, data) {
+                if (err) {
+                    return res.status(400).send({ status: false, message: err.message })
+                }
+                else {
+                    req.loginUserId = data.userId
+                    next();
+                }
+            })
         }
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
@@ -58,10 +59,10 @@ const authorisation = async function (req, res, next) {
         next()
     }
     catch (err) {
-        res.status(500).send({ status: false, error: err.message })
-    }
+        res.status(500).send({ status: false, error: err.message })
+    }
 }
 
 
 module.exports.authenticate = authenticate
-module.exports.authorisation= authorisation
+module.exports.authorisation = authorisation

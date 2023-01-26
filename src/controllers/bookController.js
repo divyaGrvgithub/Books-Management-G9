@@ -20,7 +20,10 @@ const createBook = async (req, res) => {
         if (!title) {
             return res.status(400).send({ status: false, msg: "title is required" })
         }
-
+        let isUnique = await booksModel.findOne({title: title })
+        if (isUnique.length !== 0) {
+            return res.status(400).send({ status: false, msg: "title  should be unique" })
+        }
         excerpt = data.excerpt = excerpt.trim()
         if (!excerpt) {
             return res.status(400).send({ status: false, msg: "excerpt is required" })
@@ -45,9 +48,9 @@ const createBook = async (req, res) => {
             return res.status(400).send({ status: false, msg: "ISBN is required" })
         }
 
-        let isUnique = await booksModel.find({ $or: [{ title: title }, { ISBN: ISBN }] })
-        if (isUnique.length !== 0) {
-            return res.status(400).send({ status: false, msg: "title and ISBN should be unique" })
+        let isunique = await booksModel.findOne({ISBN: ISBN })
+        if (isunique.length !== 0) {
+            return res.status(400).send({ status: false, msg: "ISBN  should be unique" })
         }
 
         category = data.category = category.trim()
@@ -134,7 +137,7 @@ const updateBooksbyId = async(req,res)=>{
         const data = req.body;
         let { title, excerpt, releasedAt, ISBN } = data
 
-        if (Object.keys(data).length == 0)
+        if (Object.keys(data).length == 0|| Object.keys(data).length > 4)
             return res.status(400).send({ status: false, message: "Please pass proper data to update. " })
         
         /*-----------------Checking fileds values are empty or not-----------------------*/
@@ -157,6 +160,21 @@ const updateBooksbyId = async(req,res)=>{
             if (!(Validation.isValidDate(releasedAt))) {
                 return res.status(400).send({ status: false, message: "Date is invalid." })}
         }
+
+        const findinDB = await booksModel.findById(id);
+        if (!findinDB)
+            return res.status(404).send({ status: false, message: "No book exist with this bookId." })//Checking if book is present in DB
+
+        if (findinDB.isDeleted == true)
+            return res.status(404).send({ status: false, message: "This book is already deleted" })//CHECKING IF DELETED OR NOT
+        
+        const duplicateTitle = await booksModel.findOne({ title: data.title })
+        if (duplicateTitle)
+            return res.status(400).send({ status: false, message: "Title is already registered" })//CHECKING TITLE IS ALREADY REGISTERED OR NOT-
+
+        const duplicateISBN = await booksModel.findOne({ ISBN: data.ISBN })
+        if (duplicateISBN)
+            return res.status(400).send({ status: false, message: "ISBN is already registered" })//CHECKING ISBN IS ALREADY REGISTERED OR NOT
 
         const updatedBooks = await booksModel.findOneAndUpdate({ _id: id },
             {

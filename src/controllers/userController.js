@@ -14,41 +14,41 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
         send({ status: false, msg: "please give some data" })//400-Bad request
 
     let { title, name, phone, email, password } = data
-    if(!Validation.isValid(title)){
-      return res.
-        status(400).send({ status: false, msg: "title should be string" })//validation for string
-    }
+
     title = data.title = title.trim()
     if (!title) {
       return res.
         status(400).send({ status: false, message: "Please provide title " })//title is mandatory   
     }
-
+    if(!Validation.isValid(title)){
+      return res.
+        status(400).send({ status: false, msg: "title should be string" })//validation for string
+    }
     if (title != "Mr" && title != "Miss" && title != "Mrs") {
       return res.
         status(400).send({ msg: "Please write title like Mr, Mrs, Miss" });//------
-    }
-    if(!Validation.isValid(name)){
-      return res.
-        status(400).send({ status: false, msg: "name should be string" })
     }
     name = data.name = name.trim()
     if (!name) {
       return res.
         status(400).send({ status: false, message: "Please provide name " })//Name is Mandatory     
     }
+    if(!Validation.isValid(name)){
+      return res.
+        status(400).send({ status: false, msg: "name should be string" })
+    }
     if (!Validation.isValidName(name)) {
       return res.
         status(400).send({ status: false, msg: "Please Enter Valid Name" })//validation for Name
-    }
-    if(!Validation.isValid(phone)){
-      return res.
-        status(400).send({ status: false, msg: "phone should be string" })
     }
     phone = data.phone = phone.trim()
     if (!phone) {
       return res.
         status(400).send({ status: false, message: "Please provide phone " })//Phone Number is mandatory
+    }
+    if(!Validation.isValid(phone)){
+      return res.
+        status(400).send({ status: false, msg: "phone should be string" })
     }
     if (!Validation.isValidNumber(phone)) {
       return res.
@@ -59,14 +59,14 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, msg: "Phone already exists" });
     }
-    if(!Validation.isValid(email)){
-      return res.
-        status(400).send({ status: false, msg: "email should be string" })
-    }
     email = data.email = email.trim()
     if (!email) {
       return res.
         status(400).send({ status: false, message: "Please provide Email " })//Email is Mandatory    
+    }
+    if(!Validation.isValid(email)){
+      return res.
+        status(400).send({ status: false, msg: "email should be string" })
     }
     if (!Validation.isValidEmail(email)) {
       return res.
@@ -77,14 +77,14 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
       return res.
         status(400).send({ status: false, msg: "email already exists" });
     }
-    if(!Validation.isValid(password)){
-      return res.
-        status(400).send({ status: false, msg: "password should be string" })
-    }
     password = data.password = password.trim()
     if (!password) {
       return res.
         status(400).send({ status: false, message: "Please provide password " })//password is mandatory
+    }
+    if(!Validation.isValid(password)){
+      return res.
+        status(400).send({ status: false, msg: "password should be string" })
     }
     if (!Validation.isValidPassword(password)) {//validation for password
       return res.
@@ -92,9 +92,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
     }
 
     const user = await userModel.create(data);//final step
-    return res.
-      status(201).
-      send({ status: true, msg: "Successfully created", data: user })//201-- created Successfully
+    return res.status(201).send({ status: true, msg: "Success", data: user })//201-- created Successfully
   } catch (error) {
     res.status(500).send({ status: false, msg: error.message })
   }

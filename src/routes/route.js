@@ -22,6 +22,7 @@ router.post("/books",middleware.authenticate,middleware.authorisation,bookContro
 router.get("/books",middleware.authenticate,bookController.getBookDetails)
 router.get("/books/:bookId",middleware.authenticate,bookController.getbookById)
 router.put("/books/:bookId",middleware.authenticate,middleware.authorisation,bookController.updateBooksbyId)
+router.delete("/books/:bookId",middleware.authenticate,middleware.authorisation,bookController.deleteBooks)
 
 // <<<<<<<<<<<<<+++++++Review api with Authentication and authorisation++++++++++++>>>>>>>>>>>
 

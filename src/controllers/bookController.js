@@ -195,7 +195,34 @@ const updateBooksbyId = async (req, res) => {
     }
 }
 
+// <<<<<<<<<<<---------------------------------Delete Book(Delete Api)----------------------------------->>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++++This Api is used to Delete a book by BookId+++++++++++++++++++++++>>>>>>>>>>>>
+
+const deleteBooks = async function (req, res) {
+    try {
+        let bookId = req.params.bookId;
+        if (!mongoose.Types.ObjectId.isValid(bookId)) {
+            return res.status(400).send({ status: false, message: "Incorrect BookId format" });
+        }
+        let book = await booksModel.findOne({ _id: bookId, isDeleted: false })
+        if (!book) {
+            return res.status(404).send({ status: false, message: "book not found" })
+        }
+        if (req.loginUserId == book.userId) {
+            await booksModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
+            return res.status(200).send({ status: true, message: "Success" })
+        }
+        else {
+            return res.status(403).send({ status: false, message: "unauthorized to delete" })
+        }
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, message: err.message })
+    }
+}
+
 module.exports.createBook = createBook
 module.exports.getBookDetails = getBookDetails
 module.exports.updateBooksbyId = updateBooksbyId
 module.exports.getbookById = getbookById
+module.exports.deleteBooks=deleteBooks

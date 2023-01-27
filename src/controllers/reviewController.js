@@ -106,7 +106,7 @@ const reviewUpdate = async function (req, res) {
       }
   }
 
-// <<<<<<<<<<<---------------------------------Delete Review(Put Api)----------------------------------->>>>>>>>>>
+// <<<<<<<<<<<---------------------------------Delete Review(Delete Api)----------------------------------->>>>>>>>>>
 // <<<<<<<++++++++++++++++++++++++++++++This Api is used to Delete a Review ++++++++++++++++++++++++++>>>>>>>>>>>>
 
 const deleteBookReview = async function (req, res) {

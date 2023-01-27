@@ -118,8 +118,6 @@ const getbookById = async function (req, res) {
     return res.status(200).send({ status: true, msg: bookData })
 }
 
-
-
 // <<<<<<<<<<<---------------------------------Update Book(Put Api)----------------------------------->>>>>>>>>>
 // <<<<<<<++++++++++This Api is used to Update a book by changing title, excerpt, release date, ISBN++++++++++>>>>>>>>>>>>
 

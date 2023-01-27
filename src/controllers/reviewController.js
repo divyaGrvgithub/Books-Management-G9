@@ -3,6 +3,9 @@ const booksModel = require("../Models/booksModel")
 const reviewModel = require("../Models/reviewModel")
 const valid = require('../validators/validator')
 
+// <<<<<<<<<<<----------------------------Create Review(Post api)----------------------------->>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++This Api is used to Review a Book+++++++++++++++++++++++++++>>>>>>>>>>>>
+
 const createReview = async function (req, res) {
     try {
         let bookId = req.params.bookId
@@ -54,6 +57,9 @@ const createReview = async function (req, res) {
 
 }
 
+// <<<<<<<<<<<---------------------------------Update Review(Put Api)----------------------------------->>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++++++This Api is used to Update A Review +++++++++++++++++++++++++++>>>>>>>>>>>>
+
 const reviewUpdate = async function (req, res) {
     try {
         let data = req.body;
@@ -100,5 +106,34 @@ const reviewUpdate = async function (req, res) {
       }
   }
 
+// <<<<<<<<<<<---------------------------------Delete Review(Put Api)----------------------------------->>>>>>>>>>
+// <<<<<<<++++++++++++++++++++++++++++++This Api is used to Delete a Review ++++++++++++++++++++++++++>>>>>>>>>>>>
+
+const deleteBookReview = async function (req, res) {
+    let { bookId, reviewId } = req.params
+            if (!mongoose.Types.ObjectId.isValid(reviewId)) {
+                return res.status(400).send({ status: false, message: "Incorrect reviewId request " });
+            }
+            if (!mongoose.Types.ObjectId.isValid(bookId)) {
+                return res.status(400).send({ status: false, message: "Incorrect bookId request" });
+            }
+            const findBook = await booksModel.findOne({ _id: bookId, isDeleted: false });
+            if (findBook) {
+                const review = await reviewModel.findOne({ _id: reviewId, bookId, isDeleted: false });
+                if (review) {
+                    await reviewModel.findByIdAndUpdate({ _id: reviewId }, { $set: { isDeleted: true, deletedAt: new Date() } });
+                    await booksModel.findByIdAndUpdate({ _id: bookId }, { reviews: findBook.reviews - 1 });
+                    return res.status(200).send({ status: true, message: "success" });
+                }
+                else {
+                    return res.status(404).send({ status: false, message: "No review for the Book" });
+                }
+            }
+            else {
+                return res.status(404).send({ status: false, message: "Book not found" });
+            }
+        }
+
 module.exports.createReview = createReview
 module.exports.reviewUpdate=reviewUpdate
+module.exports.deleteBookReview=deleteBookReview

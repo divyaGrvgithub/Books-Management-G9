@@ -26,7 +26,8 @@ router.put("/books/:bookId",middleware.authenticate,middleware.authorisation,boo
 // <<<<<<<<<<<<<+++++++Review api with Authentication and authorisation++++++++++++>>>>>>>>>>>
 
 router.post("/books/:bookId/review",middleware.authenticate,reviewController.createReview)
-router.put("//books/:bookId/review/:reviewId",middleware.authenticate,middleware.authorisation,reviewController.reviewUpdate)
+router.put("/books/:bookId/review/:reviewId",middleware.authenticate,middleware.authorisation,reviewController.reviewUpdate)
+router.delete("/books/:bookId/review/:reviewId",middleware.authenticate,middleware.authorisation,reviewController.deleteBookReview)
 
 router.all("/*",(req,res)=>{
     res.status(400).send("Invalid Http Request")  

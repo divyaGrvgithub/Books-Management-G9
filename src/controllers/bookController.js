@@ -110,7 +110,7 @@ const getbookById = async function (req, res) {
 
     if (!mongoose.isValidObjectId(bookId)) return res.status(400).send({ status: false, msg: "Please enter valid id in path param" })
 
-    let bookData = await booksModel.findOne({ _id: bookId, isDeleted: false })
+    let bookData = await booksModel.findOne({ _id: bookId, isDeleted: false }).lean()//it convert mongo object to javascript object
     if (!bookData) return res.status(400).send({ status: false, msg: "Book not found" })
 
     let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false })

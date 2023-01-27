@@ -8,7 +8,7 @@ const Validation = require("../validators/validator")
 const createUser = async (req, res) => { //=>-- it allows you to create a code in a cleaner way compared to other function.
   try {
     let data = req.body
-    if (Object.keys(data).length == 0) // return all the keys of objevt as array 
+    if (Object.keys(data).length == 0) // return all the keys of object as array 
       return res.
         status(400).
         send({ status: false, msg: "please give some data" })//400-Bad request

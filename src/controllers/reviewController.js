@@ -46,7 +46,7 @@ const createReview = async function (req, res) {
             reviewedBy: savedData.reviewedBy,
             reviewedAt: savedData.reviewedAt,
             rating: savedData.rating,
-            review: savedData.reviews
+            review: savedData.review
         }
 
         res.status(201).send({ status: true, message: "success", data: response })

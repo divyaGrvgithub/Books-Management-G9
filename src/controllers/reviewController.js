@@ -54,4 +54,32 @@ const createReview = async function (req, res) {
 
 }
 
+const updateReview = async(req,res)=>{
+    try{
+        let bookId = req.params.bookId//Getting Book Id from params
+        let reviewId = req.params.reviewId//Getting Book review Id from params
+
+        if(!mongoose.isValidObjectId(bookId)){
+            return res.status(400).send({status:false, message:"bookId is invalid"})}//Checking if valid Book Id.
+        if(!mongoose.isValidObjectId(reviewId)){
+            return res.status(400).send({status:false, message:"reviewId is invalid"})}//Checking if valid review Id.
+        
+        let data = req.body//Getting data from request body
+        let {reviewdBy, rating, review}=data//Destructuring body data
+        
+        if(Object.keys(data).length==0){
+            return res.status(400).send({status:false, messgae:"data is required"})}//If body is empty
+        
+        if (!(valid.isEmpty(reviewdBy))) {
+            return res.status(400).send({ status: false, message: "reviewedBy is empty" })}//if reviewedBy is empty or not
+        
+
+
+
+    }catch(err){
+        res.status(500).send({status:false, err:err.message})
+    }
+}
+
 module.exports.createReview = createReview
+module.exports.updateReview= updateReview

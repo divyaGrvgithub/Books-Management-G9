@@ -18,14 +18,13 @@ const isValidName = function (value) {
 }
 
 const isValidNumber = function (value) {
-    const regEx = /^\s*\91([0-9]){10}\s*$/
+    const regEx = /^\s*([0-9]){10}\s*$/
     const result = regEx.test(value)
     return result
 }
 
 const isValidEmail = function (value) {
-    let emailRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-z\-0-9]+\.)+[a-z]{2,}))$/;
+    let emailRegex = /^[A-Za-z0-9._]{3,}@[A-Za-z]{3,}[.]{1,}[A-Za-z.]{2,8}$/
     return emailRegex.test(value)
 };
 

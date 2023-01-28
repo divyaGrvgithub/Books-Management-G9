@@ -113,7 +113,7 @@ const getbookById = async function (req, res) {
     let bookData = await booksModel.findOne({ _id: bookId, isDeleted: false }).lean()//it convert mongo object to javascript object
     if (!bookData) return res.status(400).send({ status: false, msg: "Book not found" })
 
-    let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false })
+    let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({bookId:1,reviewedBy:1,reviewAt:1,rating:1,review:1})
     bookData.reviewsData = reviewData
     return res.status(200).send({ status: true, msg: bookData })
 }

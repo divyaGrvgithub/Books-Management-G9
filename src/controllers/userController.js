@@ -15,7 +15,7 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
 
     let { title, name, phone, email, password, address, ...rest } = data
 
-    if (Object.keys(rest).length == 0)
+    if (Object.keys(rest).length > 0)
       return res.status(400).send({ status: false, message: "Please pass proper data to create " })
 
     title = data.title = title.trim()
@@ -96,42 +96,46 @@ const createUser = async (req, res) => { //=>-- it allows you to create a code i
 
     if (address) {
       let { street, city, pincode, ...rest } = address
-      if (Object.keys(rest).length == 0)
+      if (Object.keys(rest).length > 0)
         return res.status(400).send({ status: false, message: "Please pass proper data in address. " })
 
       if (street) {
+        if (!Validation.isValid(street)) {
+          return res.
+            status(400).send({ status: false, msg: "street should be string" })
+        }
         street = data.street = street.trim()
         if (!street) {
           return res.
             status(400).send({ status: false, message: "Please provide street if you want" })
         }
-        if (!Validation.isValid(street)) {
-          return res.
-            status(400).send({ status: false, msg: "street should be string" })
-        }
       }
 
       if (city) {
+        if (!Validation.isValid(city)) {
+          return res.
+            status(400).send({ status: false, msg: "city should be string" })
+        }
         city = data.city = city.trim()
         if (!city) {
           return res.
             status(400).send({ status: false, message: "Please provide city if you want " })
         }
-        if (!Validation.isValid(city)) {
-          return res.
-            status(400).send({ status: false, msg: "city should be string" })
-        }
       }
 
       if (pincode) {
+        if (!Validation.isValid(pincode)) {
+          return res.
+            status(400).send({ status: false, msg: "Please give pincode in a string" })
+        }
+        if (!Validation.isValidPinCode(pincode)) {
+          return res.
+            status(400).send({ status: false, msg: "Length of the pin code should be 6" })
+        }
         pincode = data.pincode = pincode.trim()
         if (!pincode) {
           return res.
             status(400).send({ status: false, message: "Please provide pincode if you want " })
-        }
-        if (!Validation.isValidPinCode(pincode)) {
-          return res.
-            status(400).send({ status: false, msg: "pincode should be number" })
         }
       }
     }

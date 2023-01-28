@@ -183,7 +183,7 @@ const loginUser = async (req, res) => {
       setHeader("x-api-key", token);
     return res.
       status(200).
-      send({ status: true, message: "token will be valid for 24 hrs", data: { token: token } });
+      send({ status: true, message: "token will be valid for 30 minutes", data: { token: token } });
   }
   catch (err) {
     return res.status(500).send({ status: false, message: err.message })//500- server side problem

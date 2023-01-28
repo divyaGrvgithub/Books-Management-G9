@@ -49,8 +49,6 @@ const authorisation = async function (req, res, next) {
         else {
             let bookId = req.params.bookId
             let checkAuth = await bookModel.findOne({ _id: bookId })
-            console.log(checkAuth.userId)
-            console.log(req.loginUserId)
             if (checkAuth === null) return res.status(400).send({ status: false, msg: "Not find any book" })
             if (checkAuth.userId != req.loginUserId) {
                 return res.status(403).send({ status: false, msg: "You are not autherised" })

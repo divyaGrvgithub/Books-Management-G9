@@ -106,16 +106,21 @@ const getBookDetails = async (req, res) => {
 // <<<<<<<++++++++++++++++++++++++++This Api is used to get Book by bookid +++++++++++++++++++++++++++++>>>>>>>>>>>>
 
 const getbookById = async function (req, res) {
-    let bookId = req.params.bookId
+    try {
+        let bookId = req.params.bookId
 
-    if (!mongoose.isValidObjectId(bookId)) return res.status(400).send({ status: false, msg: "Please enter valid id in path param" })
+        if (!mongoose.isValidObjectId(bookId)) return res.status(400).send({ status: false, msg: "Please enter valid id in path param" })
 
-    let bookData = await booksModel.findOne({ _id: bookId, isDeleted: false }).lean()//it convert mongo object to javascript object
-    if (!bookData) return res.status(400).send({ status: false, msg: "Book not found" })
+        let bookData = await booksModel.findOne({ _id: bookId, isDeleted: false }).lean()//it convert mongo object to javascript object
+        if (!bookData) return res.status(400).send({ status: false, msg: "Book not found" })
 
-    let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({bookId:1,reviewedBy:1,reviewAt:1,rating:1,review:1})
-    bookData.reviewsData = reviewData
-    return res.status(200).send({ status: true, msg: bookData })
+        let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewAt: 1, rating: 1, review: 1 })
+        bookData.reviewsData = reviewData
+        return res.status(200).send({ status: true, msg: bookData })
+    }
+    catch (error) {
+        res.status(500).send({ status: false, message: error.message })
+    }
 }
 
 // <<<<<<<<<<<---------------------------------Update Book(Put Api)----------------------------------->>>>>>>>>>
@@ -217,12 +222,12 @@ const deleteBooks = async function (req, res) {
         }
     }
     catch (err) {
-        return res.status(500).send({ status: false, message: err.message })
-    }
+        return res.status(500).send({ status: false, message: err.message })
+    }
 }
 
 module.exports.createBook = createBook
 module.exports.getBookDetails = getBookDetails
 module.exports.updateBooksbyId = updateBooksbyId
 module.exports.getbookById = getbookById
-module.exports.deleteBooks=deleteBooks
+module.exports.deleteBooks = deleteBooks

@@ -28,7 +28,7 @@ router.delete("/books/:bookId",middleware.authenticate,middleware.authorization,
 
 router.post("/books/:bookId/review",middleware.authenticate,reviewController.createReview)
 router.put("/books/:bookId/review/:reviewId",middleware.authenticate, reviewController.reviewUpdate)
-router.delete("/books/:bookId/review/:reviewId",middleware.authenticate,middleware.authorization,reviewController.deleteBookReview)
+router.delete("/books/:bookId/review/:reviewId",middleware.authenticate,reviewController.deleteBookReview)
 
 router.all("/*",(req,res)=>{
     res.status(400).send("Invalid Http Request")  

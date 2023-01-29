@@ -48,6 +48,9 @@ const authorization = async function (req, res, next) {
         }
         else {
             let bookId = req.params.bookId
+            if (!mongoose.Types.ObjectId.isValid(bookId)) {
+                return res.status(400).send({ status: false, message: "please provide valid bookId" })
+            }
             let checkAuth = await bookModel.findOne({ _id: bookId })
             if (checkAuth === null) return res.status(400).send({ status: false, msg: "Not find any book" })
             if (checkAuth.userId != req.loginUserId) {

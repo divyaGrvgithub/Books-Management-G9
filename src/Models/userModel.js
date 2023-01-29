@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const userSchema = new mongoose.Schema({
     title: {
         type: String,
-        reuired: true,
+        required: true,
         enum: ["Mr", "Mrs", "Miss"]
     },
     name: {

@@ -116,9 +116,9 @@ const getbookById = async function (req, res) {
 
         let reviewData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ bookId: 1, reviewedBy: 1, reviewAt: 1, rating: 1, review: 1 })
         bookData.reviewsData = reviewData
-        return res.status(200).send({ status: true, msg: bookData })
-    }
-    catch (error) {
+        return res.status(200).send({ status: true, message:"Books list", data:bookData }) 
+    } 
+    catch (error) { 
         res.status(500).send({ status: false, message: error.message })
     }
 }

@@ -1,5 +1,10 @@
+const mongoose = require('mongoose')
+
 function isValidObject(value) {
     return (Object.keys(value).length > 0)
+}
+const isValidObjectId = function (ObjectId) {
+    return mongoose.Types.ObjectId.isValid(ObjectId)
 }
 
 const isValid = (value) => {
@@ -20,7 +25,7 @@ const isValidName = function (value) {
 const isValidNumber = function (value) {
     const regEx = /^\s*([0-9]){10}\s*$/
     const result = regEx.test(value)
-    return result
+    return result
 }
 
 const isValidEmail = function (value) {
@@ -44,14 +49,14 @@ function validTitle(value) {
 }
 
 const isValidArray = (value) => {
-    if (Array.isArray(value) && value.length>0) {
+    if (Array.isArray(value) && value.length > 0) {
         for (let i = 0; i < value.length; i++) {
             if (value[i].trim().length === 0 || typeof (value[i]) !== "string") { return false }
         }
         return true
-    } 
-    else { 
-        return false 
+    }
+    else {
+        return false
     }
 }
 
@@ -90,7 +95,9 @@ const isEmpty = function (value) {
     return true
 }
 
-module.exports = { isValid, isValidArray, isValidISBN, isValidObject, 
-                   validTitle, isValidDate, isValidRating , isValidPinCode, 
-                   isValidImage, isValidName, isValidNumber, isValidEmail, 
-                   isValidPassword, isEmpty}
+module.exports = {
+    isValid, isValidArray, isValidISBN, isValidObject,
+    validTitle, isValidDate, isValidRating, isValidPinCode,
+    isValidImage, isValidName, isValidNumber, isValidEmail,
+    isValidPassword, isEmpty,isValidObjectId
+}

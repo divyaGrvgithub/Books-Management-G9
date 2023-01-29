@@ -29,7 +29,7 @@ const authenticate = function (req, res, next) {
 }
 
 // <<<<<<<<<----------------------Authorisation------------------------------->>>>>>>>>>>>>
-const authorisation = async function (req, res, next) {
+const authorization = async function (req, res, next) {
     try {
         let data = req.body
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "Please enter some data" })
@@ -63,4 +63,4 @@ const authorisation = async function (req, res, next) {
 
 
 module.exports.authenticate = authenticate
-module.exports.authorisation = authorisation
+module.exports.authorization = authorization

@@ -3,9 +3,7 @@ const booksModel = require("../Models/booksModel")
 const reviewModel = require("../Models/reviewModel")
 const valid = require('../validators/validator')
 
-// <<<<<<<<<<<----------------------------Create Review(Post api)----------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++This Api is used to Review a Book+++++++++++++++++++++++++++>>>>>>>>>>>>
-
+// <<<<<<<<<<<----------------------------Create Review(Post api)----------------------------->>>>>>>>>>`
 const createReview = async function (req, res) {
     try {
         let bookId = req.params.bookId
@@ -20,16 +18,14 @@ const createReview = async function (req, res) {
 
         let { review, rating, reviewedBy, ...rest } = data
         if (Object.keys(rest).length > 0) return res.status(400).send({ status: false, message: "You can enter only review, rating , reviewedBy" })
-
-        //?Exp
+        
         if (!review) return res.status(400).send({ status: false, message: "Please provide review" })
         if (!valid.isValid(review)) return res.status(400).send({ status: false, message: "Review should be String" })
         review = data.review = review.trim()
 
         if (!rating) return res.status(400).send({ status: false, message: "Please provide rating" })
         if (!valid.isValidRating(rating)) return res.status(400).send({ status: false, message: "Rating should be Number" })
-
-        //!doubt
+        
         if (reviewedBy) {
             if (!valid.isValid(reviewedBy)) return res.status(400).send({ status: false, message: "ReviewBy should be String" })
             reviewedBy = data.reviewedBy = reviewedBy.trim()
@@ -39,7 +35,6 @@ const createReview = async function (req, res) {
 
         data.reviewedAt = Date.now()
         data.bookId = bookId
-
 
         let savedData = await reviewModel.create(data)
 
@@ -58,7 +53,6 @@ const createReview = async function (req, res) {
 }
 
 // <<<<<<<<<<<---------------------------------Update Review(Put Api)----------------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++++++This Api is used to Update A Review +++++++++++++++++++++++++++>>>>>>>>>>>>
 
 const reviewUpdate = async function (req, res) {
     try {
@@ -119,7 +113,6 @@ const reviewUpdate = async function (req, res) {
 }
 
 // <<<<<<<<<<<---------------------------------Delete Review(Delete Api)----------------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++++++++This Api is used to Delete a Review ++++++++++++++++++++++++++>>>>>>>>>>>>
 
 const deleteBookReview = async function (req, res) {
     let { bookId, reviewId } = req.params

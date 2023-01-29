@@ -5,8 +5,6 @@ const userController = require("../controllers/userController")
 const reviewController = require("../controllers/reviewController")
 const middleware = require("../middleware/auth.js")
 
-// <<<<<<<<<<++++++++++++Dummy Api+++++++++++++++++++>>>>>>>>>>>>>>>>>>>.
-
 router.get("/test-me",(req,res)=>{
     res.send("My First ever Api")
 })
@@ -24,7 +22,7 @@ router.get("/books/:bookId",middleware.authenticate,bookController.getbookById)
 router.put("/books/:bookId",middleware.authenticate,middleware.authorization,bookController.updateBooksbyId)
 router.delete("/books/:bookId",middleware.authenticate,middleware.authorization,bookController.deleteBooks)
 
-// <<<<<<<<<<<<<+++++++Review api with Authentication and authorization++++++++++++>>>>>>>>>>>
+// <<<<<<<<<<<<<+++++++Review api with Authentication++++++++++++>>>>>>>>>>>
 
 router.post("/books/:bookId/review",middleware.authenticate,reviewController.createReview)
 router.put("/books/:bookId/review/:reviewId",middleware.authenticate, reviewController.reviewUpdate)

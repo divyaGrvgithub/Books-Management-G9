@@ -6,13 +6,11 @@ const Validation = require("../validators/validator")
 const { isValidObjectId } = require("mongoose")
 
 // <<<<<<<<<<<----------------------------Create User(Post api)----------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++This Api is used to Create a Book+++++++++++++++++++++++++++>>>>>>>>>>>>
-
 const createBook = async (req, res) => {
     try {
         let data = req.body
-        if (Object.keys(data).length == 0) // return all the keys of objevt as array 
-            return res.status(400).send({ status: false, msg: "please give some data" })//400-Bad request
+        if (Object.keys(data).length == 0) 
+            return res.status(400).send({ status: false, msg: "please give some data" })
 
         let { title, excerpt, userId, ISBN, category, subcategory, ...rest } = data
 
@@ -20,6 +18,10 @@ const createBook = async (req, res) => {
         if (!title) {
             return res.status(400).send({ status: false, msg: "title is required" })
         }
+
+        let uniqueTitle = await booksModel.findOne({ title: title })                                                      
+        if (uniqueTitle) return res.status(409).send({ status: false, message: " title already exists" })
+
         excerpt = data.excerpt = excerpt.trim()
         if (!excerpt) {
             return res.status(400).send({ status: false, msg: "excerpt is required" })
@@ -42,11 +44,18 @@ const createBook = async (req, res) => {
         ISBN = data.ISBN = ISBN.trim()
         if (!ISBN) {
             return res.status(400).send({ status: false, msg: "ISBN is required" })
+        }     
+
+        if (!Validation.isValidISBN(ISBN)) {
+            return res.status(400).send({ status: false, msg: "Invalid ISBN" });
         }
 
-        let isUnique = await booksModel.find({ $or: [{ title: title }, { ISBN: ISBN }] })
-        if (isUnique.length !== 0) {
-            return res.status(400).send({ status: false, msg: "ISBN and title should be unique" })
+        let uniqueISBN = await booksModel.findOne({ ISBN: ISBN })                                                      
+        if (uniqueISBN) return res.status(409).send({ status: false, message: " ISBN already exists" })
+
+        if (!Validation.isValid(excerpt)) {                                                                              
+            return res.status(400).send({ status: false, message: "valid excerpt is required" })
+
         }
 
         category = data.category = category.trim()
@@ -73,7 +82,7 @@ const createBook = async (req, res) => {
 }
 
 // <<<<<<<<<<<---------------------------------Get Book(Get Api)------------------------------------>>>>>>>>>>
-// <<<<<<<+++++++++++++++++This Api is used get Bookdata by userID  Category Subcategory ++++++++++++++++++++>>>>>>>>>>>>
+
 
 const getBookDetails = async (req, res) => {
     try {
@@ -103,7 +112,7 @@ const getBookDetails = async (req, res) => {
 }
 
 // <<<<<<<<<<<---------------------------------Get Book By Id(Get Api)------------------------------------>>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++++This Api is used to get Book by bookid +++++++++++++++++++++++++++++>>>>>>>>>>>>
+
 
 const getbookById = async function (req, res) {
     try {
@@ -124,7 +133,6 @@ const getbookById = async function (req, res) {
 }
 
 // <<<<<<<<<<<---------------------------------Update Book(Put Api)----------------------------------->>>>>>>>>>
-// <<<<<<<++++++++++This Api is used to Update a book by changing title, excerpt, release date, ISBN++++++++++>>>>>>>>>>>>
 
 const updateBooksbyId = async (req, res) => {
     try {
@@ -139,8 +147,7 @@ const updateBooksbyId = async (req, res) => {
 
         if (Object.keys(data).length == 0)
             return res.status(400).send({ status: false, message: "Please pass proper data to update. " })
-
-        /*-----------------Checking fileds values are empty or not-----------------------*/
+       
         if (!(Validation.isEmpty(title))) {
             return res.status(400).send({ status: false, message: "title is empty" })
         }
@@ -153,8 +160,7 @@ const updateBooksbyId = async (req, res) => {
         if (!(Validation.isEmpty(ISBN))) {
             return res.status(400).send({ status: false, message: "ISBN is empty" })
         }
-
-        /*------------------------------- Validation(Regex)  -----------------------------------*/
+        
         if (ISBN) {
             if (!(Validation.isValidISBN(ISBN))) {
                 return res.status(400).send({ status: false, message: "ISBN is invalid" })
@@ -201,7 +207,6 @@ const updateBooksbyId = async (req, res) => {
 }
 
 // <<<<<<<<<<<---------------------------------Delete Book(Delete Api)----------------------------------->>>>>>>>>>
-// <<<<<<<++++++++++++++++++++++++++This Api is used to Delete a book by BookId+++++++++++++++++++++++>>>>>>>>>>>>
 
 const deleteBooks = async function (req, res) {
     try {

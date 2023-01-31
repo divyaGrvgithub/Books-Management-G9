@@ -211,12 +211,19 @@ const updateBooksbyId = async (req, res) => {
 const deleteBooks = async function (req, res) {
     try {
         let bookId = req.params.bookId;
+        if(!bookId){
+            return res.status(400).send({status: false, message: "please provide a bookId in params"})
+        }
         if (!mongoose.Types.ObjectId.isValid(bookId)) {
             return res.status(400).send({ status: false, message: "Incorrect BookId format" });
         }
-        let book = await booksModel.findOne({ _id: bookId, isDeleted: false })
-        if (!book) {
-            return res.status(404).send({ status: false, message: "book not found" })
+        let findbookId = await booksModel.findById(bookId)
+        if (!findbookId) {
+            return res.status(404).send({ status: false, msg: "no book present with this id" })
+        }
+        let CheckbookId = await booksModel.findOne({ _id: bookId, isDeleted: false })
+        if (!CheckbookId) {
+            return res.status(404).send({ status: false, message: "book does not exist" })
         }
         if (req.loginUserId == book.userId) {
             await booksModel.findByIdAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })

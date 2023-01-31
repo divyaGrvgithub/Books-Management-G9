@@ -15,7 +15,7 @@ const authenticate = function (req, res, next) {
         else {
             jwt.verify(token, "Books-Management-Group-9", function (err, data) {
                 if (err) {
-                    return res.status(400).send({ status: false, message: err.message })
+                    return res.status(401).send({ status: false, message: "token invalid" })
                 }
                 else {
                     req.loginUserId = data.userId

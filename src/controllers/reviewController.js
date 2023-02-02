@@ -16,7 +16,7 @@ const createReview = async function (req, res) {
         let data = req.body
         if (Object.keys(data).length < 1) return res.status(400).send({ status: false, message: "Please enter data in Body" })
 
-        let { review, rating, reviewedBy, ...rest } = data
+        let { review, rating, reviewedAt, ...rest } = data
         if (Object.keys(rest).length > 0) return res.status(400).send({ status: false, message: "You can enter only review, rating , reviewedBy" })
         
         if (!review) return res.status(400).send({ status: false, message: "Please provide review" })
@@ -26,9 +26,9 @@ const createReview = async function (req, res) {
         if (!rating) return res.status(400).send({ status: false, message: "Please provide rating" })
         if (!valid.isValidRating(rating)) return res.status(400).send({ status: false, message: "Rating should be Number" })
         
-        if (reviewedBy) {
-            if (!valid.isValid(reviewedBy)) return res.status(400).send({ status: false, message: "ReviewBy should be String" })
-            reviewedBy = data.reviewedBy = reviewedBy.trim()
+        if (reviewedAt) {
+            if (!valid.isValid(reviewedAt)) return res.status(400).send({ status: false, message: "ReviewBy should be String" })
+            reviewedAt = data.reviewedAt = reviewedAt.trim()
         }
 
         await booksModel.findByIdAndUpdate(bookId, { $inc: { reviews: 1 } }) //

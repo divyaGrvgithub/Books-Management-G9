@@ -1,7 +1,6 @@
 const userModel = require("../Models/userModel")
 const jwt = require("jsonwebtoken")
 const Validation = require("../validators/validator")
-const booksModel = require("../Models/booksModel")
 
 // <<<<<<<<<<<----------------------------Create User----------------------------->>>>>>>>>>
 
@@ -10,69 +9,90 @@ const createUser = async (req, res) => {
     let data = req.body
     if (Object.keys(data).length == 0) 
       return res.status(400).send({ status: false, msg: "please give some data" })
+      // console.log(Object.keys(data));
 
     let { title, name, phone, email, password, address, ...rest } = data
 
     if (Object.keys(rest).length > 0)
       return res.status(400).send({ status: false, message: "Please pass proper data to create " })
 
-    title = data.title = title.trim()
+
     if (!title) {
       return res.status(400).send({ status: false, message: "Please provide title " })  
     }
+
     if (!Validation.isValid(title)) {
       return res.status(400).send({ status: false, msg: "title should be string" })
     }
+    title = data.title = title.trim()
+
     if (title != "Mr" && title != "Miss" && title != "Mrs") {
       return res.status(400).send({ msg: "Please write title like Mr, Mrs, Miss" });
     }
-    name = data.name = name.trim()
+
+    
     if (!name) {
       return res.status(400).send({ status: false, message: "Please provide name " }) 
     }
+
     if (!Validation.isValid(name)) {
       return res.status(400).send({ status: false, msg: "name should be string" })
     }
+    name = data.name = name.trim()
+
     if (!Validation.isValidName(name)) {
       return res.status(400).send({ status: false, msg: "Please Enter Valid Name" })
     }
-    phone = data.phone = phone.trim()
+
+
     if (!phone) {
       return res.status(400).send({ status: false, message: "Please provide phone " })
     }
+
     if (!Validation.isValid(phone)) {
       return res.status(400).send({ status: false, msg: "phone should be string" })
     }
+
+    phone = data.phone = phone.trim()
+
     if (!Validation.isValidNumber(phone)) {
       return res.status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })
     }
+
     const checkPhone = await userModel.findOne({ phone: phone, isDeleted: false })
     if (checkPhone) {
       return res.status(400).send({ status: false, msg: "Phone already exists" });
     }
-    email = data.email = email.trim()
+
     if (!email) {
       return res.status(400).send({ status: false, message: "Please provide Email " }) 
     }
     if (!Validation.isValid(email)) {
       return res.status(400).send({ status: false, msg: "email should be string" })
     }
+    email = data.email = email.trim()
+
     if (!Validation.isValidEmail(email)) {
       return res.status(400).send({ status: false, msg: "Please Enter Valid email ID" })
     }
-    const checkemail = await userModel.findOne({ email: email })
+    email = data.email = email.toLowerCase()
+
+    const checkemail = await userModel.findOne({ email: email ,isDeleted:false})
     if (checkemail) {
       return res.status(400).send({ status: false, msg: "email already exists" });
     }
-    password = data.password = password.trim()
+ 
     if (!password) {
       return res.status(400).send({ status: false, message: "Please provide password " })
     }
     if (!Validation.isValid(password)) {
       return res.status(400).send({ status: false, msg: "password should be string" })
     }
+
+    password = data.password = password.trim()
+
     if (!Validation.isValidPassword(password)) {
-      return res.status(400).send({ status: false, msg: " Incorrect Password, It should be of 6-10 digits with atlest one special character, alphabet and number" });
+      return res.status(400).send({ status: false, msg: "Password must be contains one special character, alphabet and number.It should be of 8-15 digits. " });
     }
 
     if (address) {
@@ -123,6 +143,8 @@ const createUser = async (req, res) => {
 
 // <<<<<<<<<<<----------------------------Login User----------------------------->>>>>>>>>>
 
+
+
 const loginUser = async (req, res) => {
   try {
     let email = req.body.email;
@@ -141,12 +163,9 @@ const loginUser = async (req, res) => {
       return res.status(404).send({ status: false, message: " Email or Password wrong" });
     }
 
-    let token = jwt.sign({ 
-      userId: user._id.toString()
-    }, 
-      "Books-Management-Group-9",
-      { expiresIn: "30m" })
+    let token = jwt.sign({ userId: user._id.toString()}, "Books-Management-Group-9",{ expiresIn: "30m" })
     res.status(200).setHeader("x-api-key", token);
+    
     return res.status(200).send({ status: true, message: "token will be valid for 30 minutes", data: { token: token } });
   }
   catch (err) {
@@ -155,4 +174,4 @@ const loginUser = async (req, res) => {
 }
 
 module.exports.createUser = createUser
-module.exports.loginUser = loginUser
+module.exports.loginUser = loginUser

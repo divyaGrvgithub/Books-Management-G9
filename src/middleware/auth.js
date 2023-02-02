@@ -32,7 +32,7 @@ const authenticate = function (req, res, next) {
 const authorization = async function (req, res, next) {
     try {
         let data = req.body
-        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "Please enter some data" })
+        // if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "Please enter some data" })
         let { userId } = data
         if (userId) {
             if (!mongoose.Types.ObjectId.isValid(userId)) {

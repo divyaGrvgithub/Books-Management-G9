@@ -23,11 +23,11 @@ router.get("/books/:bookId",middleware.authenticate,bookController.getbookById)
 router.put("/books/:bookId",middleware.authenticate,middleware.authorization,bookController.updateBooksbyId)
 router.delete("/books/:bookId",middleware.authenticate,middleware.authorization,bookController.deleteBooks)
 
-// <<<<<<<<<<<<<+++++++Review api with Authentication++++++++++++>>>>>>>>>>>
+// <<<<<<<<<<<<<+++++++Review api ++++++++++++>>>>>>>>>>>
 
-router.post("/books/:bookId/review",middleware.authenticate,reviewController.createReview)
-router.put("/books/:bookId/review/:reviewId",middleware.authenticate, reviewController.reviewUpdate)
-router.delete("/books/:bookId/review/:reviewId",middleware.authenticate,reviewController.deleteBookReview)
+router.post("/books/:bookId/review",reviewController.createReview)
+router.put("/books/:bookId/review/:reviewId", reviewController.reviewUpdate)
+router.delete("/books/:bookId/review/:reviewId",reviewController.deleteBookReview)
 
 //<<<<<<<<<<<<<+++++++AWS++++++++++++>>>>>>>>>>>
 
